@@ -21,11 +21,16 @@ class DB
 
         return new Query(self::$conn->query($queryStr));
     }
+
+    public static function lastID()
+    {
+        return self::$conn->lastInsertId();
+    }
 }
 
 class Query
 {
-    private $query = null;
+    private $query;
 
     public function __construct($query)
     {
