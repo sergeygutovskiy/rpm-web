@@ -57,7 +57,6 @@ Route::post("login", function () {
         {
             $user = $user[0];
             
-            // var_dump($user->password, $password);
             if ($user->password != $password)
                 header("Location: login");
             else
@@ -65,9 +64,11 @@ Route::post("login", function () {
                 $token = bin2hex(random_bytes(56));
                 $user->token = $token;
 
-                $user->save();
+                DB::query(
+                	"UPDATE users SET token='" . $token . "' WHERE id=" . $user->id
+            	);
 
-                $_SESSION["auth_user_id"] = DB::lastID();
+                $_SESSION["auth_user_id"] = $user->id;
                 $_SESSION["auth_user_token"] = $token;
             
                 header("Location: home");
@@ -97,10 +98,61 @@ Route::get("home", function () {
 		header("Location: login");	
 });
 
-Route::get("", function () use ($tasks) {   
+Route::get("", function () {   
     $tasks = DB::query(
-        "SELECT * FROM tasks WHERE visible = '1'"
-    )->toClass(Task::class);
+        "SELECT tasks.id as task_id, tasks.text as task_text," 
+        . " tasks.end_date as task_end_date, tasks.status as task_status,"
+        . " users.id as user_id, users.name as user_name, users.password as user_password"
+        . " FROM tasks JOIN users" 
+        . " ON tasks.user_id = users.id" 
+        . " WHERE tasks.visible = '1'"
+    )->get();
 
-    Path::view("home", ["tasks" => $tasks]);
+    $tasksWithUsers = [];
+
+    foreach ($tasks as $sqlTask) {
+        $task = new Task();
+
+        $task->id       = $sqlTask["task_id"];
+        $task->text     = $sqlTask["task_text"];
+        $task->end_date = $sqlTask["task_end_date"];
+        $task->status   = $sqlTask["task_status"];
+
+        $user = new User();
+        $user->id       = $sqlTask["user_id"];   
+        $user->name     = $sqlTask["user_name"];   
+        $user->password = $sqlTask["user_password"];           
+
+        $task->setUser($user);
+
+        $tasksWithUsers[] = $task;
+    }
+
+    Path::view("home", ["tasks" => $tasksWithUsers]);
+});
+
+Route::post("tasks/create", function () {
+	$text = $_POST["task_text"];
+	$endDate = $_POST["task_end_date"];
+	$status = $_POST["task_status"];
+	$visible = $_POST["task_visible"];
+	// $userID = Auth::user()->id;
+
+	if (empty($text) || empty($endDate) || empty($status) || empty($visible))
+	{
+		echo json_encode("error");
+		return;
+	}
+
+	$task = new Task();
+	$task->text = $text;
+	$task->user_id = 28;  
+	$task->end_date = $endDate . " 00:00:00";
+	$task->status = $status;
+	$task->visible = $visible;  
+
+	$task->save();
+
+	echo json_encode($task);
+	return;
 });

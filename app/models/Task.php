@@ -11,6 +11,8 @@ class Task extends Model
     public $status;
     public $visible;
 
+    private $user;
+
     public array $mysqlFields = [
         "text",
         "user_id",
@@ -18,4 +20,14 @@ class Task extends Model
         "status",
         "visible"
     ];
+
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

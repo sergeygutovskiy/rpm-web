@@ -11,10 +11,15 @@
 
     <main class="dft-container">    
         <form action="/register" method="POST" class="dft-panel dft-form">
-            <input class="dft-input" name="name" placeholder="Имя">
-            <input class="dft-input" name="password" placeholder="Пароль">
-            <input class="dft-input" name="password_again" placeholder="Еще раз пароль">
-            <button class="dft-btn dft-btn--green" type="submit">Зарегистрироваться</button>
+            <input class="dft-input" name="name" 
+                placeholder="Имя" autocomplete="off">
+            <input class="dft-input" name="password" 
+                placeholder="Пароль" autocomplete="off">
+            <input class="dft-input" name="password_again" 
+                placeholder="Пароль еще раз" autocomplete="off">
+            <button class="dft-btn dft-btn--green" type="submit">
+                Войти
+            </button>
         </form>
     </main>
 </body>

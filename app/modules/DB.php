@@ -41,4 +41,9 @@ class Query
     {
         return $this->query->fetchAll(PDO::FETCH_CLASS, $className);
     }
+
+    public function get()
+    {
+        return $this->query->fetchAll();
+    }
 }
