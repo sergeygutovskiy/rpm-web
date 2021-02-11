@@ -9,6 +9,7 @@ class DB
 	private static PDO $conn; 
 	private static string $query_str;
 	private static array $query_params;
+	private static array $migations;
 
 
 	public static function connect($servername = "localhost", $db = "todo", $username = "root", $password = "root")
@@ -16,18 +17,13 @@ class DB
 		self::$conn = new PDO("mysql:host=" . $servername. ";dbname=" . $db, $username, $password);
 	}
 
-	// public function insert(string $table, array $params)
-	// {
-	// 	$columns = implode(", ", array_keys($params));
-	// 	$prepare_values = ":" . implode(",:", array_keys($params));
+	public static function query($q)
+	{
+		self::$query_str = $q;
+		self::$query_params = [];
 
-	// 	$query = $this->conn->prepare("INSERT INTO $table ($columns) VALUES ($prepare_values)");
-
-	// 	foreach ($params as $key => $value)
-	// 		$query->bindValue(":" . $key, $value);
-
-	// 	$query->execute();
-	// }
+		self::execute();
+	}
 
 	public static function insert(string $table, array $params)
 	{
@@ -36,24 +32,44 @@ class DB
 
 		self::$query_str = "INSERT INTO $table ($columns) VALUES ($prepare_values)";
 		self::$query_params = $params;
+
+		return new self;
+	}
+
+	public static function select(string $table, array $params)
+	{
+		self::$query_str = "SELECT " . implode(", ", array_values($params)) . " FROM $table";
+		self::$query_params = [];
+
+		return new self;
+	}
+
+	public static function execute_select()
+	{
+		return self::$conn->query(self::$query_str);
 	}
 
 	public static function update(string $table, array $params)
 	{
 		$query_str = "UPDATE $table SET";
+		$new_params = [];
 
 		foreach ($params as $key => $value) {
-			$query_str .= " $key=:$key";
+			$new_params[] = "$key=:$key";
 		}
 
-		self::$query_str = $query_str;
+		self::$query_str = $query_str . " " . implode(", ", $new_params);
 		self::$query_params = $params;
+
+		return new self;
 	}
 
-	public static function where(string $column, string $cond = "", string $value)
+	public static function where(string $column, string $cond, string $value)
 	{
 		$query_str = " WHERE $column $cond $value";
 		self::$query_str .= $query_str;
+
+		return new self;
 	}
 
 	public static function execute()
@@ -63,6 +79,19 @@ class DB
 		foreach (self::$query_params as $key => $value)
 			$query->bindValue(":" . $key, $value);
 
-		$query->execute();		
+		return $query->execute();
+	}
+
+	public static function migration($callback)
+	{
+		self::$migations[] = $callback;
+	}
+
+	public static function run_migrations()
+	{
+		foreach (self::$migations as $m)
+		{
+			self::query($m());
+		}
 	}
 }
