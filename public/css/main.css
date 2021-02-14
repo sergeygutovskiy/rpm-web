@@ -1,0 +1,150 @@
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	outline: none;
+}
+
+html {
+	font-size: 16px;
+	font-family: Montserrat;
+	font-weight: 300;
+}
+
+body {
+	margin: 0;
+	letter-spacing: 0.1em;
+	padding-bottom: 120px;
+	color: #333;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	display: block;
+	font-weight: 400;
+	line-height: 1.5em;
+	color: black;
+}
+
+h4 {
+	font-size: 1.25rem;
+}
+
+h3 {
+	font-size: 1.5rem;
+	margin: 12px 0;
+}
+
+h2 {
+	font-size: 2rem;
+}
+
+h1 {
+	font-size: 2.5rem;
+	margin-bottom: 16px;
+}
+
+p {
+	line-height: 1.5em;
+	/*font-weight: 400;*/
+}
+
+ul {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+	font-weight: 400;
+}
+
+label {
+	font-weight: 500;
+}
+
+button:hover {
+	cursor: pointer;
+} 
+
+nav {
+	padding: 16px 0;
+	margin-bottom: 64px;
+}
+
+nav ul {
+	display: flex;
+	justify-content: flex-end;
+}
+
+nav ul li:not(:last-child) {
+	margin-right: 16px;
+}
+
+main {
+	max-width: 1024px;
+	padding: 0 24px;
+	width: 100%;
+	margin: auto;
+}
+
+form {
+	max-width: 400px;
+	width: 100%;
+	display: grid;
+	grid-gap: 16px;
+}
+
+input {
+	font-size: 16px;
+	font-family: Montserrat;
+	font-weight: 300;
+	width: 100%;
+	padding: 8px 16px;
+	border: 0;
+	border-bottom: solid 1px lightgray;	
+}
+
+textarea {
+	font-size: 16px;
+	font-family: Montserrat;
+	font-weight: 300;
+	width: 100%;
+	padding: 8px 16px;
+	border: solid 1px lightgray;
+	resize: vertical;
+	height: 120px;
+	max-height: 300px;		
+}
+
+button {
+	font-size: 16px;
+	font-family: Montserrat;
+	font-weight: 300;
+	width: auto;
+	padding: 8px 16px;
+	border: 0;
+	/*border-bottom: solid 1px lightgray;	*/
+}
+
+.posts {
+	display: grid;
+	grid-gap: 32px;
+}
+
+.post {
+	max-width: 600px;
+    border-left: solid 3px lightgrey;
+    padding-left: 16px;
+    text-transform: capitalize;
+}
+
+.post__author {
+	margin-top: 12px;
+	font-weight: 400;
+}

@@ -46,7 +46,13 @@ class DB
 
 	public static function execute_select()
 	{
+		// var_dump(self::$query_str);
 		return self::$conn->query(self::$query_str);
+	}
+
+	public static function last_id()
+	{
+		return self::$conn->lastInsertId();
 	}
 
 	public static function update(string $table, array $params)
