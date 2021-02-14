@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+
 class Route
 {
 	static private array $get_callbacks = [];  
