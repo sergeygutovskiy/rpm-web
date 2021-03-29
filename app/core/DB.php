@@ -12,7 +12,7 @@ class DB
 	private static array $migations;
 
 
-	public static function connect($servername = "localhost", $db = "todo", $username = "root", $password = "root")
+	public static function connect($servername = "localhost", $db = "blog", $username = "root", $password = "root")
 	{
 		self::$conn = new PDO("mysql:host=" . $servername. ";dbname=" . $db, $username, $password);
 	}

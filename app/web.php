@@ -1,13 +1,21 @@
 <?php
 
 namespace App;
+
 use App\Core\DB;
 use App\Core\Route;
 use App\Core\Path;
 use App\Core\Auth; 
+
 use App\Models\Post;
 use App\Models\User;
+
+use App\Controllers\UserController;
+use App\Controllers\PostController;
+
 use PDO;
+
+// home
 
 Route::get("", function() {
 	$posts = Post::all();
@@ -15,90 +23,46 @@ Route::get("", function() {
 	require Path::view("home");
 });
 
+// users
+
 Route::get("register", function() {
-	if (Auth::is_quest())
-		require Path::view("user.register");
-	else
-		header("Location: /account");
+	$controller = new UserController();
+	return $controller->register();
 });
 
 Route::post("register", function() {
-	$name = $_POST["name"];
-	$password = $_POST["password"];
-	$token = bin2hex(random_bytes(56));
-
-	$user = User::create([
-		"name" => $name,
-		"password" => $password,
-		"token" => $token
-	]);
-
-	$_SESSION["auth_user_id"] = $user->id;
-    $_SESSION["auth_user_token"] = $token;
-
-	header("Location: /account");
+	$controller = new UserController();
+	return $controller->store();	
 });
 
 Route::get("account", function() {
-	if (Auth::is_auth())
-	{
-		$user = Auth::user();
-		require Path::view("user.home");		
-	}
-	else
-		header("Location: /register");
+	$controller = new UserController();
+	return $controller->index();
 });
 
 Route::get("logout", function() {
-	unset($_SESSION["auth_user_id"]);
-	unset($_SESSION["auth_user_token"]);
-
-	echo "Вы вышли из аккаунта";
+	$controller = new UserController();
+	return $controller->logout();
 });
 
 Route::get("login", function() {
-	if (Auth::is_quest())
-		require Path::view("user.login");
-	else
-		header("Location: /account");	
+	$controller = new UserController();
+	return $controller->login();
 });
 
 Route::post("login", function() {
-	$name = $_POST["name"];
-	$password = $_POST["password"];
-	// $token = bin2hex(random_bytes(56));
+	$controller = new UserController();
+	return $controller->auth();
+});
 
-	$user = DB
-		::select(User::$table, User::$fillable)
-		::where("name", "=", "'" . $name . "'")
-		::execute_select()->fetchAll(PDO::FETCH_CLASS, User::class);
+// posts
 
-	if (count($user))
-	{
-		$user = $user[0];
-		
-		if ($user->password == $password)
-		{
-			$_SESSION["auth_user_id"] = $user->id;
-			$_SESSION["auth_user_token"] = $user->token;
-
-			header("Location: /account");
-		}
-	}
-
-
-	header("Location: /login");
+Route::get("posts/{id}", function() {
+	$controller = new PostController();
+	return $controller->index();
 });
 
 Route::post("posts", function() {
-	$title = $_POST["post_title"];
-	$text = $_POST["post_text"];
-
-	Post::create([
-		"title" => $title,
-		"text" => $text,
-		"user_id" => Auth::user()->id
-	]);
-
-	header("Location: /account");
+	$controller = new PostController();
+	return $controller->store();
 });

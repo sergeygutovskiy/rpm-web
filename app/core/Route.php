@@ -11,6 +11,8 @@ class Route
 	public static function get($url, $callback)
 	{
 		self::$get_callbacks[$url] = $callback;
+		// preg_match_all("/\{(.*?)\}/", $url, $res);
+		// var_dump($url, $res);
 	}
 
 	public static function post($url, $callback)
@@ -22,11 +24,11 @@ class Route
 	{
 		if (count($_POST))
 		{
-			self::$post_callbacks[$url]();
+			return self::$post_callbacks[$url]();
 		}
 		else
 		{
-			self::$get_callbacks[$url]();
+			return self::$get_callbacks[$url]();
 		}
 	}
 }

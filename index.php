@@ -9,9 +9,13 @@ require_once "app/core/DB.php";
 require_once "app/core/Model.php";
 require_once "app/core/Path.php";
 require_once "app/core/Route.php";
+require_once "app/core/Controller.php";
 // require models
 require_once "app/models/User.php";
 require_once "app/models/Post.php";
+// require controllers
+require_once "app/controllers/UserController.php";
+require_once "app/controllers/PostController.php";
 // require routes
 require_once "app/web.php";
 
